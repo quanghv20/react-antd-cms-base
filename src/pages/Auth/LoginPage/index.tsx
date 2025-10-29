@@ -3,14 +3,12 @@ import { Form, Input, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { authService } from "@/services";
 import { appMessage } from "@/utils/message";
-import { encryptWithPublicKey } from "@/utils/rsaEncrypt.util";
-import { SERVER_PUBLIC_KEY_BASE64, STORAGE_KEYS } from "@/constants";
 import { useAppLoading } from "@/context/LoadingContext";
+import { storage } from "@/utils/storage";
+import { PATH } from "@/routes/path";
 import Logo from "@/layouts/Logo";
 
 import "./LoginPage.css";
-import { storage } from "@/utils/storage";
-import { PATH } from "@/routes/path";
 
 export default function LoginPage() {
   const [form] = Form.useForm();

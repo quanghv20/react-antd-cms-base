@@ -4,7 +4,6 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios";
-import { STORAGE_KEYS } from "@/constants";
 import { authService } from "./auth/auth.service";
 import { storage } from "@/utils/storage";
 
@@ -29,9 +28,9 @@ const configService: AxiosInstance = axios.create({
 configService.interceptors.request.use(
   (config: CustomAxiosRequestConfig) => {
     if (!config.noAuth) {
-      const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+      const accessToken = storage.getAccessToken();
       if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+        config.headers["Authorization"] = `Bearer ${accessToken}`;
       }
     }
     return config;
@@ -76,6 +75,8 @@ configService.interceptors.response.use(
           (
             originalRequest.headers as any
           ).Authorization = `Bearer ${newAccessToken}`;
+
+          console.log("newAccessToken: ", newAccessToken);
 
           // ✅ Retry lại request gốc với token mới
           return configService(originalRequest);

@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
-  Modal,
   Form,
   Input,
   Popconfirm,
@@ -10,69 +9,30 @@ import {
   Card,
   Tag,
   Button,
-  Descriptions,
   Select,
 } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
-import {
-  DeleteOutlined,
-  EyeOutlined,
-  LockOutlined,
-  UnlockOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import type {
+  IUser,
+  IUserPayload,
+  IUserSearchParams,
+} from "@/services/user/user.type";
+import { userService } from "@/services";
+import UserFormModal from "./modals/UserFormModal";
+import UserViewModal from "./modals/UserViewModal";
 
 const { Option } = Select;
-
-interface IUser {
-  id: string;
-  username: string;
-  fullName: string;
-  role: string;
-  phone: string;
-  status: 1 | 0; // 1: active, 0: inactive
-  createdAt: string;
-}
 
 export default function UserManagementPage() {
   const [form] = Form.useForm();
   const [filterForm] = Form.useForm();
 
-  // Fake data
-  const initialData: IUser[] = [
-    {
-      id: "MNV0001",
-      username: "nguyentrgiang",
-      fullName: "Nguyễn Trường Giang",
-      role: "Khách hàng",
-      phone: "0988 4545 56",
-      status: 1,
-      createdAt: "21/07/2025",
-    },
-    {
-      id: "MNV0002",
-      username: "nguyentrgiang2",
-      fullName: "Nguyễn Trường Giang",
-      role: "Nhân viên",
-      phone: "0988 4545 56",
-      status: 0,
-      createdAt: "21/07/2025",
-    },
-    {
-      id: "MNV0003",
-      username: "nguyentrgiang3",
-      fullName: "Nguyễn Trường Giang",
-      role: "Quản trị",
-      phone: "0988 4545 56",
-      status: 1,
-      createdAt: "21/07/2025",
-    },
-  ];
-
-  const [data, setData] = useState<IUser[]>(initialData);
+  const [data, setData] = useState<IUser[]>([]);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 5,
-    total: initialData.length,
+    pageSize: 10,
+    total: 0,
   });
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -80,25 +40,36 @@ export default function UserManagementPage() {
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [viewingItem, setViewingItem] = useState<IUser | null>(null);
 
-  // 1️⃣ Thêm state để lưu những dòng được chọn
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  // 2️⃣ rowSelection cho Table
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (newSelectedRowKeys: React.Key[]) => {
-      setSelectedRowKeys(newSelectedRowKeys);
-    },
-    // optional: có thể disable checkbox với điều kiện
-    // getCheckboxProps: (record: IUser) => ({
-    //   disabled: record.status === 0, // vd: disable với người dùng đã khóa
-    // }),
+  /** 🔹 Fetch data */
+  const fetchUsers = async (params?: IUserSearchParams) => {
+    try {
+      const res = await userService.search(params || {});
+      setData(res.data);
+      setPagination({
+        current: params?.page || 1,
+        pageSize: params?.size || 10,
+        total: res.count,
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   /** 🔹 Actions */
-  const handleView = (item: IUser) => {
-    setViewingItem(item);
-    setViewModalVisible(true);
+  const handleView = async (item: IUser) => {
+    try {
+      const res = await userService.getById(item.id);
+      setViewingItem(res);
+      setViewModalVisible(true);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleAdd = () => {
@@ -113,60 +84,75 @@ export default function UserManagementPage() {
     setModalVisible(true);
   };
 
-  const handleDelete = (id: string) => {
-    setData((prev) => prev.filter((d) => d.id !== id));
-  };
-
-  const handleSubmit = () => {
-    const values = form.getFieldsValue();
-    if (editingItem) {
-      setData((prev) =>
-        prev.map((d) => (d.id === editingItem.id ? { ...d, ...values } : d))
-      );
-    } else {
-      setData((prev) => [
-        ...prev,
-        {
-          id: String(new Date().getTime()),
-          status: 1,
-          createdAt: new Date().toLocaleDateString(),
-          ...values,
-        },
-      ]);
+  const handleDelete = async (id: number) => {
+    try {
+      await userService.remove([id]);
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
     }
-    setModalVisible(false);
   };
 
-  const handleToggleStatus = (item: IUser) => {
-    setData((prev) =>
-      prev.map((d) =>
-        d.id === item.id ? { ...d, status: d.status === 1 ? 0 : 1 } : d
-      )
-    );
+  const handleSubmit = async () => {
+    try {
+      const values = form.getFieldsValue() as IUserPayload;
+      if (editingItem) {
+        await userService.update(editingItem.id, values);
+      } else {
+        await userService.create(values);
+      }
+      setModalVisible(false);
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  /** 🔹 Columns */
+  const handleSearch = async () => {
+    const values = filterForm.getFieldsValue();
+    const params: IUserSearchParams = {
+      fullName: values.fullName,
+      employeeCode: values.employeeCode,
+      status:
+        values.status === 1
+          ? "ACTIVE"
+          : values.status === 0
+          ? "INACTIVE"
+          : undefined,
+      page: 1,
+      size: 10,
+    };
+    fetchUsers(params);
+  };
+
+  /** 🔹 Table columns */
   const columns: ColumnsType<IUser> = [
-    { title: "Mã NV", dataIndex: "id", key: "id", width: 120, align: "center" },
+    {
+      title: "Mã NV",
+      dataIndex: "employeeCode",
+      key: "employeeCode",
+      width: 120,
+      align: "center",
+    },
     { title: "Họ tên", dataIndex: "fullName", key: "fullName" },
-    { title: "SDT", dataIndex: "phone", key: "phone", align: "center" },
-    { title: "Vai trò", dataIndex: "role", key: "role", align: "center" },
+    { title: "Email", dataIndex: "email", key: "email", align: "center" },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       align: "center",
-      render: (val: number) => (
-        <Tag color={val === 1 ? "green" : "red"}>
-          {val === 1 ? "Đang hoạt động" : "Ngưng hoạt động"}
+      render: (val: string) => (
+        <Tag color={val === "ACTIVE" ? "green" : "red"}>
+          {val === "ACTIVE" ? "Đang hoạt động" : "Ngưng hoạt động"}
         </Tag>
       ),
     },
     {
       title: "Ngày tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      dataIndex: "createdDate",
+      key: "createdDate",
       align: "center",
+      render: (val: string) => new Date(val).toLocaleDateString(),
     },
     {
       title: "Thao tác",
@@ -176,26 +162,19 @@ export default function UserManagementPage() {
       width: 150,
       render: (_, record) => (
         <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+          {/* Xem chi tiết */}
           <EyeOutlined
             style={{ cursor: "pointer" }}
             onClick={() => handleView(record)}
           />
-          <Popconfirm
-            title={
-              record.status === 1
-                ? "Bạn có chắc muốn khoá tài khoản này?"
-                : "Bạn có chắc muốn mở khoá tài khoản này?"
-            }
-            onConfirm={() => handleToggleStatus(record)}
-            okText="Có"
-            cancelText="Không"
-          >
-            {record.status === 1 ? (
-              <LockOutlined style={{ color: "red", cursor: "pointer" }} />
-            ) : (
-              <UnlockOutlined style={{ color: "green", cursor: "pointer" }} />
-            )}
-          </Popconfirm>
+
+          {/* Sửa thông tin */}
+          <EditOutlined
+            style={{ color: "blue", cursor: "pointer" }}
+            onClick={() => handleEdit(record)}
+          />
+
+          {/* Xoá người dùng */}
           <Popconfirm
             title="Bạn có chắc muốn xoá người dùng này?"
             onConfirm={() => handleDelete(record.id)}
@@ -216,22 +195,18 @@ export default function UserManagementPage() {
         <Form form={filterForm} layout="vertical">
           <Row gutter={16}>
             <Col span={6}>
-              <Form.Item label="Mã nhân viên" name="id">
+              <Form.Item label="Mã nhân viên" name="employeeCode">
                 <Input placeholder="Nhập mã NV" allowClear />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="Tên người dùng" name="username">
-                <Input placeholder="Nhập tên người dùng" allowClear />
+              <Form.Item label="Họ tên" name="fullName">
+                <Input placeholder="Nhập họ tên" allowClear />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item label="Vai trò" name="role">
-                <Select allowClear placeholder="Chọn vai trò">
-                  <Option value="Khách hàng">Khách hàng</Option>
-                  <Option value="Nhân viên">Nhân viên</Option>
-                  <Option value="Quản trị">Quản trị</Option>
-                </Select>
+              <Form.Item label="Email" name="email">
+                <Input placeholder="Nhập email" allowClear />
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -244,27 +219,7 @@ export default function UserManagementPage() {
             </Col>
           </Row>
           <div className="flex-center">
-            <Button
-              type="primary"
-              ghost
-              onClick={() => {
-                const { id, username, role, status } =
-                  filterForm.getFieldsValue();
-
-                setData(
-                  initialData.filter((d) => {
-                    return (
-                      (!id || d.id.includes(id)) &&
-                      (!username || d.username.includes(username)) &&
-                      (!role || d.role === role) &&
-                      (status === undefined ||
-                        status === "" ||
-                        d.status === status)
-                    );
-                  })
-                );
-              }}
-            >
+            <Button type="primary" ghost onClick={handleSearch}>
               Tìm kiếm
             </Button>
           </div>
@@ -279,7 +234,7 @@ export default function UserManagementPage() {
           justifyContent: "flex-end",
         }}
       >
-        <Button type="primary" variant="solid" onClick={handleAdd}>
+        <Button type="primary" onClick={handleAdd}>
           Thêm mới
         </Button>
       </div>
@@ -290,100 +245,20 @@ export default function UserManagementPage() {
         columns={columns}
         dataSource={data}
         pagination={pagination}
-        rowSelection={rowSelection} // ✅ Thêm dòng này
       />
 
-      {/* Modal tạo/cập nhật */}
-      <Modal
-        open={modalVisible}
-        title={editingItem ? "Cập nhật người dùng" : "Thêm mới người dùng"}
+      <UserFormModal
+        visible={modalVisible}
+        item={editingItem}
         onCancel={() => setModalVisible(false)}
-        footer={null}
-        width={600}
-      >
-        <Form form={form} layout="vertical" onFinish={handleSubmit}>
-          <Form.Item
-            label="Họ tên"
-            name="fullName"
-            rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-          >
-            <Input placeholder="Họ tên" />
-          </Form.Item>
+        onSubmit={handleSubmit}
+      />
 
-          <Form.Item
-            label="Tên tài khoản"
-            name="username"
-            rules={[{ required: true, message: "Vui lòng nhập tên tài khoản" }]}
-          >
-            <Input placeholder="Tên tài khoản" />
-          </Form.Item>
-
-          <Form.Item
-            label="SĐT"
-            name="phone"
-            rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
-          >
-            <Input placeholder="Số điện thoại" />
-          </Form.Item>
-
-          <Form.Item
-            label="Vai trò"
-            name="role"
-            rules={[{ required: true, message: "Vui lòng nhập vai trò" }]}
-          >
-            <Input placeholder="Vai trò" />
-          </Form.Item>
-
-          <Form.Item style={{ textAlign: "right" }}>
-            <Button
-              onClick={() => setModalVisible(false)}
-              style={{ marginRight: 8 }}
-            >
-              Huỷ
-            </Button>
-            <Button type="primary" htmlType="submit">
-              Lưu
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-      {/* Modal xem chi tiết */}
-      <Modal
-        open={viewModalVisible}
-        title="Thông tin người dùng"
+      <UserViewModal
+        visible={viewModalVisible}
+        item={viewingItem}
         onCancel={() => setViewModalVisible(false)}
-        footer={null}
-        width={700}
-      >
-        {viewingItem && (
-          <Descriptions
-            column={1}
-            bordered
-            size="small"
-            labelStyle={{ fontWeight: "500", color: "#333" }}
-          >
-            <Descriptions.Item label="Họ tên">
-              {viewingItem.fullName}
-            </Descriptions.Item>
-            <Descriptions.Item label="Tên tài khoản">
-              {viewingItem.username}
-            </Descriptions.Item>
-            <Descriptions.Item label="SĐT">
-              {viewingItem.phone}
-            </Descriptions.Item>
-            <Descriptions.Item label="Vai trò">
-              {viewingItem.role}
-            </Descriptions.Item>
-            <Descriptions.Item label="Trạng thái">
-              {viewingItem.status === 1 ? (
-                <Tag color="green">Hoạt động</Tag>
-              ) : (
-                <Tag color="red">Ngưng hoạt động</Tag>
-              )}
-            </Descriptions.Item>
-          </Descriptions>
-        )}
-      </Modal>
+      />
     </div>
   );
 }
