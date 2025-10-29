@@ -62,10 +62,10 @@ export const authService = {
     // Ví dụ trả về ADMIN
     return fakeUsers.ADMIN;
 
-    // // Hoặc MANAGER
+    // Hoặc MANAGER
     // return fakeUsers.MANAGER;
 
-    // // Hoặc HR
+    // Hoặc HR
     // return fakeUsers.HR;
   },
 };

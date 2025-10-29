@@ -1,5 +1,6 @@
 import { PERMISSIONS } from "@/constants";
 import type { IUserLogged } from "./auth.types";
+import { ROLE } from "@/constants/role";
 
 export const fakeUsers: Record<string, IUserLogged> = {
   ADMIN: {
@@ -17,8 +18,8 @@ export const fakeUsers: Record<string, IUserLogged> = {
     createdDate: "2024-01-01T00:00:00Z",
     lastModifiedBy: null,
     lastModifiedDate: null,
-    roles: ["ADMIN"],
-    permissions: [PERMISSIONS.SUPER_ADMIN], // ADMIN có quyền tất cả
+    roles: [ROLE.SUPER_ADMIN],
+    permissions: [PERMISSIONS.SUPER_ADMIN], // SUPER_ADMIN có quyền tất cả
   },
 
   MANAGER: {
@@ -36,7 +37,7 @@ export const fakeUsers: Record<string, IUserLogged> = {
     createdDate: "2024-01-01T00:00:00Z",
     lastModifiedBy: null,
     lastModifiedDate: null,
-    roles: ["MANAGER"],
+    roles: [ROLE.MANAGER],
     permissions: [
       PERMISSIONS.DASHBOARD_VIEW,
       PERMISSIONS.USER_READ,
@@ -63,7 +64,7 @@ export const fakeUsers: Record<string, IUserLogged> = {
     createdDate: "2024-01-01T00:00:00Z",
     lastModifiedBy: null,
     lastModifiedDate: null,
-    roles: ["HR"],
+    roles: [ROLE.HR],
     permissions: [
       PERMISSIONS.USER_READ,
       PERMISSIONS.USER_CREATE,
