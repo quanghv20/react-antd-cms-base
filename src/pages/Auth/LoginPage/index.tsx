@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Form, Input, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { authService } from "@/services";
@@ -8,7 +9,7 @@ import { useAppLoading } from "@/context/LoadingContext";
 import Logo from "@/layouts/Logo";
 
 import "./LoginPage.css";
-import { useEffect, useRef } from "react";
+import { storage } from "@/utils/storage";
 
 export default function LoginPage() {
   const [form] = Form.useForm();
@@ -20,38 +21,23 @@ export default function LoginPage() {
     try {
       openAppLoading();
 
-      // 🔐 Mã hoá password
-      const passwordEncrypted = encryptWithPublicKey(
-        SERVER_PUBLIC_KEY_BASE64,
-        values.password
-      );
-      if (!passwordEncrypted) {
-        appMessage.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
-        return;
-      }
-
       // payload login
       const payload = {
         username: values.username,
-        password: passwordEncrypted,
+        password: values.password,
       };
 
       // login
       const res = await authService.login(payload);
 
-      if (res?.accessToken?.token) {
-        // ✅ Sau khi login thành công → lấy thông tin user
-        const user = await authService.getUserDetail();
-
+      if (res) {
         // Lưu tokens
-        localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, res.accessToken.token);
-        localStorage.setItem(
-          STORAGE_KEYS.REFRESH_TOKEN,
-          res.refreshToken.token
-        );
+        storage.setAccessToken(res.access_token);
+        storage.setRefreshToken(res.refresh_token);
 
-        // Lưu user detail (stringify trước khi lưu)
-        localStorage.setItem(STORAGE_KEYS.USER_LOGGED, JSON.stringify(user));
+        // Lấy thông tin user logged in và lưu
+        // const user = await authService.getUserDetail();
+        // storage.setUserLogged(user);
 
         appMessage.success("Đăng nhập thành công!");
         navigate("/");

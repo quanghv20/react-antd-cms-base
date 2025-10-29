@@ -1,12 +1,12 @@
 import axios, {
   AxiosError,
-  AxiosHeaders,
   type AxiosInstance,
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios";
 import { STORAGE_KEYS } from "@/constants";
 import { authService } from "./auth/auth.service";
+import { storage } from "@/utils/storage";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string;
 
@@ -40,48 +40,6 @@ configService.interceptors.request.use(
 );
 
 // Response interceptor
-// configService.interceptors.response.use(
-//   (response: AxiosResponse) => response,
-//   async (error: AxiosError) => {
-//     const originalRequest = error.config as CustomAxiosRequestConfig;
-//     const status = error.response?.status;
-
-//     // Case 401 hoặc 403: thử refresh token 1 lần
-//     if (
-//       (status === 401 || status === 403) &&
-//       !originalRequest._retry &&
-//       !originalRequest.noAuth &&
-//       !originalRequest.url?.includes("/auth-service/auth/refresh") // tránh loop refresh
-//     ) {
-//       originalRequest._retry = true;
-
-//       // Xử lý 401 Unauthorized
-//       if (status === 401) {
-//         // Clear token/session
-//         localStorage.clear();
-
-//         window.location.href = "/login?expired=1";
-//       }
-
-//       // Xử lý 403 Forbidden
-//       if (status === 403) {
-//         // Không clear token, chỉ redirect
-//         window.location.href = "/login?forbidden=1";
-//       }
-//     }
-
-//     // Nếu đã thử refresh rồi nhưng vẫn lỗi → reject
-//     // 🔹 Normalize error message trước khi throw
-//     const message =
-//       (error.response?.data as any)?.message ||
-//       error.message ||
-//       "Có lỗi xảy ra, vui lòng thử lại";
-
-//     return Promise.reject(new Error(message));
-//   }
-// );
-
-// Response interceptor
 configService.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
@@ -93,7 +51,7 @@ configService.interceptors.response.use(
       (status === 401 || status === 403) &&
       !originalRequest._retry &&
       !originalRequest.noAuth &&
-      !originalRequest.url?.includes("/auth-service/auth/refresh") // tránh loop refresh
+      !originalRequest.url?.includes("/auth/refresh") // tránh loop refresh
     ) {
       originalRequest._retry = true;
 
@@ -101,17 +59,15 @@ configService.interceptors.response.use(
         // 🟢 Thử refresh token qua service có sẵn
         const res = await authService.refreshToken();
 
-        if (res?.accessToken) {
-          const newAccessToken = res.accessToken;
-          const newRefreshToken = res.refreshToken;
+        if (res?.access_token) {
+          const newAccessToken = res.access_token;
+          const newRefreshToken = res.refresh_token;
 
           // Lưu token mới
-          localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, newAccessToken.token);
-          if (newRefreshToken)
-            localStorage.setItem(
-              STORAGE_KEYS.REFRESH_TOKEN,
-              newRefreshToken.token
-            );
+          if (newRefreshToken) {
+            storage.setAccessToken(newAccessToken);
+            storage.setRefreshToken(newRefreshToken);
+          }
 
           // Gắn token mới vào request gốc
           if (!originalRequest.headers) {
@@ -119,7 +75,7 @@ configService.interceptors.response.use(
           }
           (
             originalRequest.headers as any
-          ).Authorization = `Bearer ${newAccessToken.token}`;
+          ).Authorization = `Bearer ${newAccessToken}`;
 
           // ✅ Retry lại request gốc với token mới
           return configService(originalRequest);
