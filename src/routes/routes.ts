@@ -10,14 +10,12 @@ import {
 } from "@/pages";
 import { PATH } from "./path";
 import type { ComponentType } from "react";
-import { PERMISSIONS } from "@/constants";
 
 export interface IRoute {
   key: string;
   path: string;
   element: ComponentType;
   label: string;
-  allowBack?: boolean;
   requiredPermissions?: string | string[];
 }
 

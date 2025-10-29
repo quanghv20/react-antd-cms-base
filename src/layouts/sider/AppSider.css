@@ -20,15 +20,15 @@
 
 /* Hover menu item */
 .app-sider .ant-menu-item:hover {
-  color: #ff541d !important;
-  background: rgba(255, 0, 0, 0.1) !important; /* nền hover đỏ nhạt */
+  color: var(--primary-color) !important;
+  background: transparent;
 }
 
 /* Selected menu item */
 .app-sider .ant-menu-item-selected {
-  color: #ff541d !important;
+  color: var(--primary-color) !important;
   font-weight: 700 !important;
-  background: rgba(255, 0, 0, 0.1) !important; /* nền selected đỏ nhạt */
+  background: transparent;
 }
 
 /* Border trái khi selected */
@@ -38,7 +38,7 @@
   left: 0;
   width: 6px;
   height: 100%;
-  background: #ff541d;
+  background: var(--primary-color);
 }
 
 /* Logo */
@@ -71,20 +71,20 @@
 
 /* Hover parent menu */
 .my-menu .ant-menu-submenu-title:hover {
-  color: #ff541d !important;
-  background: rgba(255, 0, 0, 0.1) !important;
+  color: var(--primary-color-hover) !important;
+  background: transparent;
 }
 
 .my-menu .ant-menu-submenu-title:hover .ant-menu-item-icon,
 .my-menu .ant-menu-submenu-title:hover .ant-menu-item-icon svg,
 .my-menu .ant-menu-submenu-title:hover svg {
-  color: #ff541d !important;
-  fill: #ff541d !important;
+  color: var(--primary-color-hover) !important;
+  fill: var(--primary-color-hover) !important;
 }
 
 /* Active/selected parent menu */
 .my-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
-  color: #ff541d !important;
+  color: var(--primary-color) !important;
   font-weight: 700 !important;
 }
 
@@ -96,5 +96,5 @@
 }
 
 .my-menu .ant-menu-submenu-selected > .ant-menu-submenu-title .anticon {
-  color: #ff541d !important;
+  color: var(--primary-color) !important;
 }

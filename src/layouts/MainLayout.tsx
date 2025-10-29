@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Layout } from "antd";
 import { ROUTES } from "@/routes/routes";
 import { matchPath, Outlet, useLocation } from "react-router-dom";
-import { BackButton } from "@/components/UI";
 import AppSider from "./sider/AppSider";
 import AppHeader from "./header/AppHeader";
 
@@ -14,7 +13,6 @@ const MainLayout: React.FC = () => {
   const location = useLocation();
 
   let currentLabel = "";
-  let allowBack;
 
   // xử lý riêng root "/"
   if (location.pathname === "/") {
@@ -26,7 +24,6 @@ const MainLayout: React.FC = () => {
         matchPath({ path: r.path, end: true }, location.pathname)
     );
     currentLabel = currentRoute?.label || "";
-    allowBack = currentRoute?.allowBack;
   }
 
   return (
@@ -51,7 +48,6 @@ const MainLayout: React.FC = () => {
               margin: "16px 24px 0px",
             }}
           >
-            {allowBack && <BackButton />}
             {currentLabel}
           </div>
 
