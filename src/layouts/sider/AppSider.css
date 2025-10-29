@@ -1,0 +1,100 @@
+.app-sider {
+  position: fixed; /* cố định sidebar */
+  top: 0;
+  left: 0;
+  height: 100vh; /* full height viewport */
+  width: 200px; /* điều chỉnh theo layout */
+  background: white;
+  overflow-y: auto; /* nếu menu dài, có thể scroll bên trong */
+  z-index: 1000; /* đảm bảo nằm trên các phần khác */
+}
+
+.app-sider .ant-menu {
+  background: white !important;
+}
+
+.app-sider .ant-menu-item,
+.app-sider .ant-menu-submenu-title {
+  color: #030229 !important;
+}
+
+/* Hover menu item */
+.app-sider .ant-menu-item:hover {
+  color: #ff541d !important;
+  background: rgba(255, 0, 0, 0.1) !important; /* nền hover đỏ nhạt */
+}
+
+/* Selected menu item */
+.app-sider .ant-menu-item-selected {
+  color: #ff541d !important;
+  font-weight: 700 !important;
+  background: rgba(255, 0, 0, 0.1) !important; /* nền selected đỏ nhạt */
+}
+
+/* Border trái khi selected */
+.app-sider .ant-menu-item-selected::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: #ff541d;
+}
+
+/* Logo */
+.logo-sider {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 12px;
+  transition: center 0.3s, padding 0.3s;
+}
+
+/* Khi sidebar collapsed, logo nhỏ lại */
+.app-sider.ant-layout-sider-collapsed .logo-sider {
+  transform: scale(0.8);
+}
+
+/* Parent menu (submenu title) */
+.my-menu .ant-menu-submenu-title {
+  height: 48px !important;
+  color: #030229 !important;
+  font-family: "Nunito", sans-serif !important;
+  font-size: var(--fontSizeDefault);
+  font-weight: 500;
+  transition: color 0.3s ease, font-weight 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Hover parent menu */
+.my-menu .ant-menu-submenu-title:hover {
+  color: #ff541d !important;
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.my-menu .ant-menu-submenu-title:hover .ant-menu-item-icon,
+.my-menu .ant-menu-submenu-title:hover .ant-menu-item-icon svg,
+.my-menu .ant-menu-submenu-title:hover svg {
+  color: #ff541d !important;
+  fill: #ff541d !important;
+}
+
+/* Active/selected parent menu */
+.my-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: #ff541d !important;
+  font-weight: 700 !important;
+}
+
+/* Icon trong parent menu */
+.my-menu .ant-menu-submenu-title .anticon {
+  color: #030229 !important;
+  margin-right: 8px;
+  transition: color 0.3s ease;
+}
+
+.my-menu .ant-menu-submenu-selected > .ant-menu-submenu-title .anticon {
+  color: #ff541d !important;
+}

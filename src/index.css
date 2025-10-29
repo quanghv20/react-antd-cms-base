@@ -1,0 +1,327 @@
+:root {
+  /* --primary-color: #ffb547;
+  --primary-color-hover: #ffc066; 
+  --primary-color-active: #e6a33d; */
+}
+
+:root {
+  --primary-color: #ff541d; /* màu chủ đạo */
+  --primary-color-hover: #ff7540; /* sáng hơn một chút khi hover */
+  --primary-color-active: #e64010; /* tối hơn khi active */
+}
+
+body {
+  font-family: "Roboto", sans-serif !important;
+}
+
+/* === INPUT === */
+.ant-input:hover,
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper:hover,
+.ant-input-affix-wrapper-focused {
+  border-color: var(--primary-color-hover) !important;
+  box-shadow: 0 0 0 2px var(--primary-color-shadow) !important;
+}
+
+.ant-input:active,
+.ant-input-affix-wrapper:active {
+  border-color: var(--primary-color-active) !important;
+}
+
+/* === INPUT NUMBER === */
+.ant-input-number:hover,
+.ant-input-number-focused {
+  border-color: var(--primary-color-hover) !important;
+  box-shadow: 0 0 0 2px var(--primary-color-shadow) !important;
+}
+
+.ant-input-number:active {
+  border-color: var(--primary-color-active) !important;
+}
+
+/* === SELECT === */
+.ant-select:hover .ant-select-selector {
+  border-color: var(--primary-color-hover) !important;
+}
+
+.ant-select-focused .ant-select-selector {
+  border-color: var(--primary-color-hover) !important;
+  box-shadow: 0 0 0 2px var(--primary-color-shadow);
+}
+
+.ant-select:active .ant-select-selector {
+  border-color: var(--primary-color-active) !important;
+}
+
+/* === DATEPICKER === */
+.ant-picker:hover {
+  border-color: var(--primary-color-hover) !important;
+}
+
+.ant-picker-focused {
+  border-color: var(--primary-color-hover) !important;
+  box-shadow: 0 0 0 2px var(--primary-color-shadow) !important;
+}
+
+.ant-picker:active {
+  border-color: var(--primary-color-active) !important;
+}
+
+.ant-picker-active-bar {
+  background: var(--primary-color) !important;
+}
+
+.ant-picker-cell-inner::before {
+  border-color: var(--primary-color) !important;
+}
+
+:where(.css-dev-only-do-not-override-kbg4zp).ant-picker-dropdown
+  .ant-picker-cell-in-view.ant-picker-cell-selected:not(
+    .ant-picker-cell-disabled
+  )
+  .ant-picker-cell-inner,
+:where(.css-dev-only-do-not-override-kbg4zp).ant-picker-dropdown
+  .ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+    .ant-picker-cell-disabled
+  )
+  .ant-picker-cell-inner,
+:where(.css-dev-only-do-not-override-kbg4zp).ant-picker-dropdown
+  .ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+    .ant-picker-cell-disabled
+  )
+  .ant-picker-cell-inner {
+  background: var(--primary-color) !important;
+}
+
+/* Spin indicator mặc định */
+.ant-spin-dot .ant-spin-dot-item,
+.ant-spin-dot.ant-spin-dot-spin .ant-spin-dot-item {
+  background: var(--primary-color) !important;
+}
+
+/* Spinner dạng circle */
+.ant-spin-dot-spin > .ant-spin-dot-item {
+  background: var(--primary-color) !important;
+}
+
+.ant-spin-dot > .ant-spin-dot-item {
+  background: var(--primary-color) !important;
+}
+
+/* Spinner mặc định dạng circle */
+.ant-spin-dot-spin .ant-spin-dot-item {
+  background: var(--primary-color) !important;
+}
+
+/* Switch bật (checked) dùng màu xanh lá từ biến */
+.ant-switch-checked {
+  background: var(--primary-color) !important;
+}
+
+/* Switch khi hover bật */
+.ant-switch-checked:hover {
+  background: var(--primary-color) !important;
+}
+
+/* === Modal & Popconfirm OK button === */
+.ant-popconfirm-buttons > .ant-btn-default:hover,
+.ant-modal-footer > .ant-btn-default:hover {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.ant-btn-primary {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #fff;
+}
+
+/* Hover & Focus */
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: var(--primary-color-hover) !important;
+  border-color: var(--primary-color-hover) !important;
+  color: #fff;
+}
+
+/* Active */
+.ant-btn-primary:active {
+  background: var(--primary-color-active) !important;
+  border-color: var(--primary-color-active) !important;
+  color: #fff;
+}
+
+/* === Tabs Active === */
+.ant-tabs-tab-active > .ant-tabs-tab-btn {
+  color: var(--primary-color) !important;
+  font-weight: 500 !important;
+}
+
+.ant-tabs-tab:hover {
+  color: var(--primary-color) !important;
+}
+
+/* Active tab ink bar (gạch chân) */
+.ant-tabs-ink-bar {
+  background: var(--primary-color) !important;
+}
+
+/* === Pagination Active Item === */
+.ant-pagination-item-active {
+  border-color: var(--primary-color) !important;
+}
+
+.ant-pagination-item-active > a {
+  color: var(--primary-color) !important;
+}
+
+.ant-pagination-options-quick-jumper input:hover,
+.ant-pagination-options-quick-jumper input:focus {
+  border-color: var(--primary-color-hover) !important;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-start {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+/* --- Toàn bộ Input, Select, TextArea --- */
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker,
+.ant-picker-input > input {
+  border-radius: 2px !important;
+}
+
+/* TextArea riêng biệt */
+.ant-input-textarea {
+  border-radius: 2px !important;
+}
+
+/* Button */
+.ant-btn {
+  border-radius: 2px !important;
+}
+
+/* Popover / Dropdown item */
+.ant-select-dropdown .ant-select-item-option {
+  border-radius: 2px !important;
+}
+
+/* DatePicker, RangePicker */
+.ant-picker {
+  border-radius: 2px !important;
+}
+
+/* Nếu dùng InputNumber */
+.ant-input-number,
+.ant-input-number-handler-wrap {
+  border-radius: 2px !important;
+}
+
+/* Nếu có AutoComplete */
+.ant-auto-complete .ant-select-selector {
+  border-radius: 2px !important;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #edf2f7 !important;
+  /* Nếu muốn chữ đậm hơn */
+  font-weight: 700 !important;
+}
+
+/* Global style cho button type="primary" */
+
+/* Font chung */
+button[type="primary"] {
+  font-weight: 500 !important;
+  transition: all 0.2s ease;
+}
+
+/* Hover, focus, active chung */
+button[type="primary"]:hover,
+button[type="primary"]:focus,
+button[type="primary"]:active {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Solid variant */
+button[type="primary"].solid {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #fff;
+}
+
+button[type="primary"].solid:hover {
+  background-color: var(--primary-color-hover) !important;
+  border-color: var(--primary-color-hover) !important;
+  color: #fff !important;
+}
+
+button[type="primary"].solid:active,
+button[type="primary"].solid:focus {
+  background-color: var(--primary-color-active) !important;
+  border-color: var(--primary-color-active) !important;
+  color: #fff !important;
+}
+
+/* Outlined variant */
+button[type="primary"].outlined {
+  background-color: transparent;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+button[type="primary"].outlined:hover {
+  border-color: var(--primary-color-hover) !important;
+  color: var(--primary-color-hover) !important;
+}
+
+button[type="primary"].outlined:active,
+button[type="primary"].outlined:focus {
+  border-color: var(--primary-color-hover) !important;
+  color: var(--primary-color-hover) !important;
+}
+
+/* Ghost primary button */
+.ant-btn-color-primary.ant-btn-variant-solid.ant-btn-background-ghost {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  background-color: transparent !important;
+  border-radius: 2px;
+  font-weight: 400;
+  transition: all 0.2s ease;
+}
+
+.ant-btn-color-primary.ant-btn-variant-solid.ant-btn-background-ghost:hover,
+.ant-btn-color-primary.ant-btn-variant-solid.ant-btn-background-ghost:focus {
+  color: var(--primary-color-hover) !important;
+  border-color: var(--primary-color-hover) !important;
+  background-color: transparent !important;
+}
+
+.ant-btn-color-primary.ant-btn-variant-solid.ant-btn-background-ghost:active {
+  color: var(--primary-color-active) !important;
+  border-color: var(--primary-color-active) !important;
+  background-color: transparent !important;
+}
+
+.ant-table-selection-column {
+  padding-left: 16px !important;
+}

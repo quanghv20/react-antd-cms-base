@@ -1,0 +1,49 @@
+/* Solid variant */
+.primary-button {
+  font-weight: 400;
+}
+
+.primary-button:hover,
+.primary-button:focus,
+.primary-button:active {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.primary-button-solid {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.primary-button-solid:hover {
+  background-color: var(--primary-color-hover) !important;
+  border-color: var(--primary-color-hover) !important;
+  color: #fff !important;
+}
+
+.primary-button-solid:active,
+.primary-button-solid:focus {
+  background-color: var(--primary-color-active) !important;
+  border-color: var(--primary-color-active) !important;
+  color: #fff !important;
+}
+
+.primary-button-outlined {
+  background-color: transparent;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+  transition: all 0.2s ease;
+}
+
+.primary-button-outlined:hover {
+  border-color: var(--primary-color-hover) !important;
+  color: var(--primary-color-hover) !important;
+}
+
+.primary-button-outlined:active,
+.primary-button-outlined:focus {
+  border-color: var(--primary-color-hover) !important;
+  color: var(--primary-color-hover) !important;
+}
