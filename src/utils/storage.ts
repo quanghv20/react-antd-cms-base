@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from "@/constants";
+import type { IUserLogged } from "@/services/auth/auth.types";
 
 export const storage = {
   /** Lưu dữ liệu vào localStorage */
@@ -73,12 +74,12 @@ export const storage = {
   /** ------------------------
    *  USER LOGGED
    * ------------------------ */
-  setUserLogged(user: Record<string, any>) {
+  setUserLogged(user: IUserLogged) {
     this.set(STORAGE_KEYS.USER_LOGGED, user);
   },
 
-  getUserLogged<T = Record<string, any>>(): T | null {
-    return this.get<T>(STORAGE_KEYS.USER_LOGGED);
+  getUserLogged(): IUserLogged | null {
+    return this.get<IUserLogged>(STORAGE_KEYS.USER_LOGGED);
   },
 
   removeUserLogged() {

@@ -39,64 +39,106 @@ const AppSider: React.FC<AppSiderProps> = ({ collapsed }) => {
   const menuItems: AppMenuItem[] = [
     {
       key: PATH.DASHBOARD,
-      icon: <DashboardOutlined />, // Dashboard vẫn hợp lý
+      icon: <DashboardOutlined />,
       label: "Dashboard",
+      allowedPermissions: [PERMISSIONS.DASHBOARD_VIEW],
     },
     {
       key: "management",
-      icon: <AppstoreOutlined />, // Quản lý tổng hợp
+      icon: <AppstoreOutlined />,
       label: "Quản lý",
-      allowedPermissions: [],
+      allowedPermissions: [
+        PERMISSIONS.USER_READ,
+        PERMISSIONS.PRODUCT_READ,
+        PERMISSIONS.ORDER_READ,
+        PERMISSIONS.PRODUCT_CATEGORY_READ,
+      ],
       children: [
         {
           key: PATH.USER_MANAGEMENT,
-          icon: <TeamOutlined />, // Người dùng / nhóm
+          icon: <TeamOutlined />,
           label: "Quản lý người dùng",
-          allowedPermissions: [],
+          allowedPermissions: [
+            PERMISSIONS.USER_READ,
+            PERMISSIONS.USER_CREATE,
+            PERMISSIONS.USER_UPDATE,
+            PERMISSIONS.USER_DELETE,
+          ],
         },
         {
           key: PATH.PRODUCT_MANAGEMENT,
-          icon: <ShopOutlined />, // Sản phẩm
+          icon: <ShopOutlined />,
           label: "Quản lý sản phẩm",
-          allowedPermissions: [],
+          allowedPermissions: [
+            PERMISSIONS.PRODUCT_READ,
+            PERMISSIONS.PRODUCT_CREATE,
+            PERMISSIONS.PRODUCT_UPDATE,
+            PERMISSIONS.PRODUCT_DELETE,
+          ],
         },
         {
           key: PATH.ORDER_MANAGEMENT,
-          icon: <ShoppingCartOutlined />, // Đơn hàng
+          icon: <ShoppingCartOutlined />,
           label: "Quản lý đơn hàng",
-          allowedPermissions: [],
+          allowedPermissions: [
+            PERMISSIONS.ORDER_READ,
+            PERMISSIONS.ORDER_CREATE,
+            PERMISSIONS.ORDER_UPDATE,
+            PERMISSIONS.ORDER_DELETE,
+          ],
         },
         {
           key: PATH.PRODUCT_CATEGORY_MANAGEMENT,
-          icon: <FileTextOutlined />, // Danh mục sản phẩm
+          icon: <FileTextOutlined />,
           label: "Quản lý danh mục SP",
-          allowedPermissions: [],
+          allowedPermissions: [
+            PERMISSIONS.PRODUCT_CATEGORY_READ,
+            PERMISSIONS.PRODUCT_CATEGORY_CREATE,
+            PERMISSIONS.PRODUCT_CATEGORY_UPDATE,
+            PERMISSIONS.PRODUCT_CATEGORY_DELETE,
+          ],
         },
       ],
     },
     {
       key: "settings",
-      icon: <SettingOutlined />, // Cài đặt tổng
+      icon: <SettingOutlined />,
       label: "Cài đặt",
-      allowedPermissions: [],
+      allowedPermissions: [
+        PERMISSIONS.ROLE_READ,
+        PERMISSIONS.SETTING_READ,
+        PERMISSIONS.NOTIFICATION_READ,
+        PERMISSIONS.REPORT_VIEW,
+      ],
       children: [
         {
           key: PATH.REPORT,
-          icon: <FileTextOutlined />, // Báo cáo
+          icon: <FileTextOutlined />,
           label: "Báo cáo",
-          allowedPermissions: [],
+          allowedPermissions: [
+            PERMISSIONS.REPORT_VIEW,
+            PERMISSIONS.REPORT_EXPORT,
+          ],
         },
         {
           key: PATH.NOTIFICATION,
-          icon: <BellOutlined />, // Thông báo
+          icon: <BellOutlined />,
           label: "Thông báo",
-          allowedPermissions: [],
+          allowedPermissions: [
+            PERMISSIONS.NOTIFICATION_READ,
+            PERMISSIONS.NOTIFICATION_CREATE,
+            PERMISSIONS.NOTIFICATION_UPDATE,
+            PERMISSIONS.NOTIFICATION_DELETE,
+          ],
         },
         {
           key: PATH.SETTING,
-          icon: <SettingOutlined />, // Cài đặt chi tiết
-          label: "Cài đặt",
-          allowedPermissions: [],
+          icon: <SettingOutlined />,
+          label: "Cài đặt hệ thống",
+          allowedPermissions: [
+            PERMISSIONS.SETTING_READ,
+            PERMISSIONS.SETTING_UPDATE,
+          ],
         },
       ],
     },

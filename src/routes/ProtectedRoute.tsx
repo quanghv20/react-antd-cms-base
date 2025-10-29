@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import useHasPermission from "@/components/Permission/useHasPermission";
 import { PATH } from "@/routes/path";
 import { Spin } from "antd";
+import { storage } from "@/utils/storage";
+import type { IUserLogged } from "@/services/auth/auth.types";
+import useHasPermission from "@/components/Permission/useHasPermission";
 
 type ProtectedRouteProps = {
   element: React.ReactElement;
@@ -17,12 +19,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const { hasPermission } = useHasPermission();
   const [isChecking, setIsChecking] = useState(true);
-  const [userLogged, setUserLogged] = useState<string | null>(null);
+  const [userLogged, setUserLogged] = useState<IUserLogged | null>(null);
 
   useEffect(() => {
     // simulate check login từ localStorage / async API
-    const logged = localStorage.getItem("USER_LOGGED");
-    setUserLogged(logged);
+    const userLogged = storage.getUserLogged();
+    setUserLogged(userLogged);
     setIsChecking(false);
   }, []);
 
@@ -43,20 +45,20 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // // ❌ Chưa login → redirect login
-  // if (!userLogged) {
-  //   return <Navigate to={PATH.LOGIN} replace />;
-  // }
+  if (!userLogged) {
+    return <Navigate to={PATH.LOGIN} replace />;
+  }
 
-  // // ✅ Nếu route không yêu cầu quyền → cho vào
-  // if (!requiredPermissions) {
-  //   return element;
-  // }
+  // ✅ Nếu route không yêu cầu quyền → cho vào
+  if (!requiredPermissions) {
+    return element;
+  }
 
   // // ✅ Nếu có yêu cầu quyền → check
-  // const isAllowed = hasPermission(requiredPermissions, options);
-  // if (!isAllowed) {
-  //   return <Navigate to="/403" replace />;
-  // }
+  const isAllowed = hasPermission(requiredPermissions, options);
+  if (!isAllowed) {
+    return <Navigate to="/403" replace />;
+  }
 
   return element;
 };

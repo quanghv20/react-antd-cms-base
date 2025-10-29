@@ -10,6 +10,7 @@ import Logo from "@/layouts/Logo";
 
 import "./LoginPage.css";
 import { storage } from "@/utils/storage";
+import { PATH } from "@/routes/path";
 
 export default function LoginPage() {
   const [form] = Form.useForm();
@@ -36,11 +37,11 @@ export default function LoginPage() {
         storage.setRefreshToken(res.refresh_token);
 
         // Lấy thông tin user logged in và lưu
-        // const user = await authService.getUserDetail();
-        // storage.setUserLogged(user);
+        const userLogged = await authService.getUserLogged();
+        storage.setUserLogged(userLogged);
 
         appMessage.success("Đăng nhập thành công!");
-        navigate("/");
+        navigate(PATH.DASHBOARD);
       }
     } catch (err) {
       appMessage.error(

@@ -8,7 +8,7 @@ export interface IAuthLoginResponse {
   refreshToken: { token: string; duration: number };
 }
 
-export interface IUserDetail {
+export interface IUserLogged {
   id: number;
   username: string;
   email: string;
@@ -23,5 +23,6 @@ export interface IUserDetail {
   createdDate: string | null;
   lastModifiedBy: string | null;
   lastModifiedDate: string | null;
+  roles: string[];
   permissions: string[];
 }
