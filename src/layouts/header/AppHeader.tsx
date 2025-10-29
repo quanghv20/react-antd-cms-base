@@ -32,10 +32,6 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, onToggle }) => {
     navigate(PATH.LOGIN);
   };
 
-  // const handleLogout = async () => {
-  //   await authService.refreshToken();
-  // };
-
   useEffect(() => {
     const userInfoStr = localStorage.getItem(STORAGE_KEYS.USER_LOGGED);
     if (userInfoStr) {
@@ -48,14 +44,12 @@ const AppHeader: React.FC<AppHeaderProps> = ({ collapsed, onToggle }) => {
     <Menu
       items={[
         {
-          key: "1",
+          key: "PROFILE",
           icon: <UserOutlined />,
-          label: (
-            <span onClick={() => navigate(PATH.DASHBOARD)}>Tài khoản</span>
-          ),
+          label: <span>Tài khoản</span>,
         },
         {
-          key: "2",
+          key: "LOGOUT",
           icon: <LogoutOutlined style={{ color: "red" }} />,
           label: <span>Đăng xuất</span>,
           onClick: handleLogout,

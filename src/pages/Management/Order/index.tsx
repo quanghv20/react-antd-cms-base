@@ -89,12 +89,6 @@ export default function OrderManagementPage() {
     setViewModalVisible(true);
   };
 
-  const handleUpdateStatus = (id: string, newStatus: IOrder["status"]) => {
-    setData((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, status: newStatus } : d))
-    );
-  };
-
   /** 🔹 Columns */
   const columns: ColumnsType<IOrder> = [
     {
